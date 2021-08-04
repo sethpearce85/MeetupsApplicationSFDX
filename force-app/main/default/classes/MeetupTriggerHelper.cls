@@ -8,9 +8,7 @@ public with sharing class MeetupTriggerHelper {
     public static void populateRegistrationCode(List<Meetup__c> newTriggerMeetUps){
         DescribeFieldResult registrationCode = Schema.Meetup__c.RegistrationCode__c.getDescribe();
         for(Meetup__c m : newTriggerMeetUps){
-            
             if(m.RegistrationCode__c == null || m.RegistrationCode__c == '' ){
-              
                m.RegistrationCode__c = generateRegistrationCode(registrationCode.getLength());
             }
         }
