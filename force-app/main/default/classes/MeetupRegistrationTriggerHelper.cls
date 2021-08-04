@@ -17,5 +17,19 @@ public with sharing class MeetupRegistrationTriggerHelper {
       
   }
 
+  public static void verifyMeetupStatus(List<MeetupRegistration__c> meetupRegs){
+
+    Set<Id> mregIds = (new Map<Id, MeetupRegistration__c>(meetupRegs)).keyset();
+    
+    List<MeetupRegistration__c> mRegs = [SELECT Id, FirstName__c, Meetup__c, Meetup__r.Status__c FROM MeetupRegistration__c WHERE Id IN :mregIds];
+      for(MeetupRegistration__c mReg : mRegs){
+          if(mReg.Meetup__r.Status__c == 'Closed'){
+              system.debug(mReg.Meetup__r.Status__C);
+              MeetupRegistration__c mur = (MeetupRegistration__c)Trigger.Newmap.get(mReg.Id);
+              mur.addError('Cannot Register for a closed meetup!');
+          }
+      }
+  }
+
 
 }
