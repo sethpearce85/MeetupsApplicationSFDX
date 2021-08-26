@@ -60,12 +60,9 @@ const columns = [{
 
 export default class MeetupRegistration extends NavigationMixin(LightningElement) {
 
-    
-     currentPageReference;
     @track firstName;
     @track lastName;
     @track email;
-    // queryTerm;
 
     @track columns = columns;
     @track error;
@@ -75,7 +72,7 @@ export default class MeetupRegistration extends NavigationMixin(LightningElement
     @track meetupId;
   
     selectedRegistrationCode;
-    pageId;
+   
   
     //auto populate current user firstname, lastname and email into register modal form.
     @wire(getRecord, {
@@ -93,6 +90,10 @@ export default class MeetupRegistration extends NavigationMixin(LightningElement
             this.email = data.fields.Email.value;
         }
     }
+
+    //NOTE -- TBD - Using Page REF to pass Meetup Reg# to URL for reference
+    // currentPageReference;
+    // pageId;
     // @wire(CurrentPageReference)
     // setCurrentPageReference(currentPageReference){
     //     if(currentPageReference){
@@ -132,14 +133,11 @@ export default class MeetupRegistration extends NavigationMixin(LightningElement
             const queryTerm = evt.target.value;
             console.log('before callout to SFDC');
             console.log(queryTerm);
-            // this.navigateToNewPage();
-            //fetch the url query term and send to apex controller
             getMeetupRecordList({registrationCodeStr : queryTerm})
             .then(
                 result => {
                     console.log(result);
-                    this.meetupList = result;
-                    
+                    this.meetupList = result; 
                 }).catch(
                 error=> {
                     this.error = error;
@@ -158,6 +156,7 @@ export default class MeetupRegistration extends NavigationMixin(LightningElement
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         this.meetupId = event.detail.row.Id;
+
         getMeetupRegCount({meetupId : this.meetupId})
             .then(
                 result => {
@@ -171,63 +170,39 @@ export default class MeetupRegistration extends NavigationMixin(LightningElement
                             message: 'There are the max number of registrations for this meetup!',
                             variant: 'warn'
                         }));
-
                     }
-                   // this.meetupList = result;
-                    
-                }).catch(
+                })
+            .catch(
                 error=> {
                     this.error = error;
                     console.log(this.error);
                 }
             );
-        
-        // console.log(event.detail);
-
-       
     }
     
-   handleSuccess(){
-       
-    this.dispatchEvent(new ShowToastEvent({
-        title: 'Registered Successfully',
-        message: 'You have been registered for the event!',
-        variant: 'success'
-    }));
-       this.modalOpen = false
+    handleSuccess(){
+        this.dispatchEvent(new ShowToastEvent({
+            title: 'Registered Successfully',
+            message: 'You have been registered for the event!',
+            variant: 'success'
+        }));
+        this.modalOpen = false
    }
 
     closeModal(){
         this.modalOpen = false;
     }
 
-    submitRegistration(event){
-        
+    submitRegistration(event){   
         const fields = event.detail.fields;
         fields.Meetup__c = this.meetupId;
         this.modalOpen = false;
         
-        console.log('submitting form');
-        this.modalOpen = false;
-
         this.dispatchEvent(new ShowToastEvent({
             title: 'Registered Successfully',
             message: 'You have been registered for the event!',
             variant: 'success'
         }));
-        // createMessageRegistration({meetupId : this.meetupId, firstName : this.firstName , lastName : this.lastName, email : this.email})
-        // .then(
-        //     result => {
-        //         console.log(result);
-        //         this.modalOpen = false;
-                
-        //     }).catch(
-        //     error=> {
-        //         this.error = error;
-        //         console.log(this.error);
-        //     }
-        // );
-
     }
   
 

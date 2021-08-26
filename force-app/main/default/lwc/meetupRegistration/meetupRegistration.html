@@ -7,16 +7,17 @@
                 type="search"
             ></lightning-input>
         </div>
-        <!-- Table Results -->
+
+<!-- Table Results -->
     <template if:true={meetupList}>
         <lightning-datatable data={meetupList} columns={columns} key-field="Id" onrowaction={handleRowAction} hide-checkbox-column>
         </lightning-datatable>
     </template>
 
-    
     <template if:true={error}>
         {error}
     </template>
+
 <!-- Modal Code  -->
    <template if:true={modalOpen}>
     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -32,10 +33,7 @@
                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Meetup Registration</h2>
             </header>
             <div class="slds-p-bottom_large slds-p-left_large slds-modal__content slds-p-around_medium">
-                <lightning-record-edit-form
-                  object-api-name="MeetupRegistration__c"
-                  onsuccess={handleSuccess}
-                >
+                <lightning-record-edit-form object-api-name="MeetupRegistration__c" onsuccess={handleSuccess}>
                     <lightning-messages></lightning-messages>
                     <lightning-input-field field-name="FirstName__c" value={firstName} > </lightning-input-field>
                     <lightning-input-field field-name="LastName__c" value={lastName}>
@@ -43,7 +41,6 @@
                     <lightning-input-field field-name="Email__c" value={email}>
                     </lightning-input-field>
                     <lightning-input-field field-name="Meetup__c" value={meetupId} disabled="true"></lightning-input-field>
-            
                     <footer class="slds-modal__footer">
                         <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
                         <button class="slds-button slds-button_brand" onclick={submitRegistration} title="OK">Submit</button>

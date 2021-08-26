@@ -9,7 +9,7 @@ public with sharing class MeetupRegistrationTriggerHelper {
               mReg.Email__c.addError('This Email Address is already in use for this Meetup!');
           }
       }
-
+      //update : Seth P - Need to filter query by the Meetup__c to avoid error when creating meetup registrations 
       for(MeetupRegistration__c mReg : [Select Email__c from MeetupRegistration__c where Email__c in :meetupRegEmailMap.keySet()]){
           MeetupRegistration__c newMeetupReg = meetupRegEmailMap.get(mReg.Email__c);
           newMeetupReg.Email__c.addError('This Email Address is already in use for this Meetup!');
